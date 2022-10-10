@@ -47,6 +47,15 @@ app.post("/register", jsonParser, async (req, res) => {
 	const awsApiKeyId = response.id;
 	const awsApiKey = response.value;
 	console.log(response);
+
+	// Associate the API key with a usage plan
+	const usageKeyCommand = new CreateUsagePlanKeyCommand({
+		keyId: response.id,
+		keyType: process.env.AWS_USAGE_PLAN_KEY_TYPE,
+		usagePlanId: process.env.AWS_USAGE_PLAN_ID,
+	});
+	const usageKeyResponse = await client.send(usageKeyCommand);
+	console.log(usageKeyResponse);
 });
 
 app.get("/", function (_req, res) {
