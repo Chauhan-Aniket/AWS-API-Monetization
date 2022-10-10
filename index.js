@@ -56,6 +56,26 @@ app.post("/register", jsonParser, async (req, res) => {
 	});
 	const usageKeyResponse = await client.send(usageKeyCommand);
 	console.log(usageKeyResponse);
+
+	// create Stripe customer
+	console.log("create stripe customer");
+	const customer = await stripe.customers.create({
+		email: req.body.email,
+		name: `${req.body.firstname} ${req.body.lastname}`,
+		description: "Customer created through /register endpoint",
+		metadata: {
+			awsAPIKeyId: awsApiKeyId,
+		},
+	});
+	console.log("stripe customer created");
+
+	// create Stripe subscription
+	console.log("create stripe subscription");
+	const subscription = await stripe.subscriptions.create({
+		customer: customer.id,
+		items: [{ price: process.env.STRIPE_PRICE_KEY }],
+	});
+	console.log("stripe subscription created: " + subscription.id);
 });
 
 app.get("/", function (_req, res) {
