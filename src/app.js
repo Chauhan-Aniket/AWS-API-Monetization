@@ -11,7 +11,7 @@ async function submitRegistration() {
 	let body = { email, firstname, lastname };
 	console.log(body);
 
-	const URL = "http://localhost:8000/register";
+	const URL = "http://localhost:5000/register";
 	let response = await fetch(URL, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
