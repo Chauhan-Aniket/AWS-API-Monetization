@@ -95,6 +95,9 @@ app.post("/register", jsonParser, async (req, res) => {
 	moesifMiddleware.updateUser(user);
 	console.log(user);
 	console.log("Moesif create user");
+
+	res.status(200);
+	res.send({ apikey: awsApiKey });
 });
 
 app.get("/", function (_req, res) {
