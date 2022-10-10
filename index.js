@@ -76,6 +76,25 @@ app.post("/register", jsonParser, async (req, res) => {
 		items: [{ price: process.env.STRIPE_PRICE_KEY }],
 	});
 	console.log("stripe subscription created: " + subscription.id);
+
+	// create user and company in Moesif
+	const company = { companyId: subscription.id };
+	moesifMiddleware.updateCompany(company);
+	console.log("Moesif create company");
+
+	const user = {
+		userId: awsApiKeyId,
+		companyId: subscription.id,
+		metadata: {
+			email: req.body.email,
+			firstName: req.body.firstname,
+			lastName: req.body.lastname,
+			apikey: awsApiKey,
+		},
+	};
+	moesifMiddleware.updateUser(user);
+	console.log(user);
+	console.log("Moesif create user");
 });
 
 app.get("/", function (_req, res) {
